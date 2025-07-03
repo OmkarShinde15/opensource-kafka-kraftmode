@@ -6,6 +6,11 @@ This guide walks you through installing and running **Kafka in KRaft mode** on a
 
 ---
 
+## 📚 Resources
+
+ - [Kafka KRaft Overview](https://docs.confluent.io/platform/current/kafka-metadata/kraft.html#kraft-overview)
+ - [Kafka Downloads](https://kafka.apache.org/downloads)
+
 ## 🚀 Prerequisites
 
 - Linux-based system (Tested on CentOS/Ubuntu)
@@ -54,16 +59,36 @@ Edit the file: /opt/kafka/config/kraft/server.properties
 
 Replace/add:
 ```
-# The node id associated with this instance's roles
+# Unique node ID for this broker instance
 node.id=1
 
-# The connect string for the controller quorum
+# Controller quorum string (format: nodeId@hostname:port)
 controller.quorum.voters=1@hostname:9093
-listeners=PLAINTEXT://hostname:9092,CONTROLLER://hostname:9093
-log.dirs=/data/kafkadata/logs
-```
-Take reference from server.properties stored in repository folder 
 
+# Listeners for client and controller communication
+listeners=PLAINTEXT://hostname:9092,CONTROLLER://hostname:9093
+
+# Directory where Kafka stores log data
+log.dirs=/data/kafkadata/logs
+
+```
+Kafka controls how long it retains topic log segments through several parameters. One key setting is:
+```
+log.retention.hours=168
+```
+This default value retains log data for 7 days.
+
+You can adjust this based on your use case and available storage. Additional retention parameters you may consider:
+
+ - log.retention.minutes
+ - log.retention.ms
+ - log.retention.bytes
+
+These settings influence disk storage and, indirectly, memory consumption depending on topic size and broker activity.
+
+To update retention settings, edit the same file: /opt/kafka/config/kraft/server.properties
+
+📄 Note: Refer to the [server.properties]() file version-controlled in this repository to align configurations across environments.
 
 ## 🔐 Step 3: Generate and Format Cluster ID
 Kafka in KRaft mode requires a Cluster ID to initialize the log directory for metadata storage.
@@ -101,4 +126,99 @@ You should see:
 bootstrap.checkpoint
 meta.properties
 ```
+
+
+## 📈 Step 4: Configure Kafka Heap Size (Optional)
+
+To ensure optimal performance and stability of Kafka, you need to configure the heap size appropriately. This refers to the memory allocated to the Java Virtual Machine (JVM) running Kafka.
+
+This is set to 1G by default:
+```
+grep KAFKA_HEAP_OPTS= /opt/kafka/bin/kafka-server-start.sh
+```
+Update the heap size as per your system resources and expected load.
+In my case, I have set:
+```
+KAFKA_HEAP_OPTS="-Xmx8G -Xms6G"
+```
+ - -Xms6G: Initial JVM heap size is 6 GB
+
+ - -Xmx8G: Maximum JVM heap size is 8 GB
+
+Depending on the size of the RAM allocated to your server, update this accordingly. Ensure that the allocated heap size is sufficient to handle the expected message traffic and the size of the data being processed.
+
+## 🖥️ Step 5: Create systemd Service
+
+### 5.1 Set Permissions
+```
+useradd kafka
+chown -R kafka:kafka /opt/kafka /data/kafkadata
+```
+
+### 5.2 Create systemd Unit File
+```
+vi /etc/systemd/system/kafka.service
+
+Paste:
+[Unit]
+Description=Apache Kafka KRaft
+After=network.target
+
+[Service]
+Type=simple
+User=kafka
+Group=kafka
+ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/kraft/server.properties
+ExecStop=/opt/kafka/bin/kafka-server-stop.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### 5.3 Start Kafka
+```
+systemctl daemon-reload
+systemctl start kafka
+systemctl enable kafka
+systemctl status kafka
+```
+
+## 🧪 Step 6: Test Kafka
+
+### 6.1 Create a Topic
+```
+/opt/kafka/bin/kafka-topics.sh --create --topic kafka-topic-test --bootstrap-server hostname:9092
+```
+
+### 6.2 Produce Messages
+```
+/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server hostname:9092 --topic kafka-topic-test
+```
+
+You’ll get a prompt. Type your message and hit ENTER:
+```
+>Hello Kafka, this is a test message
+```
+### 6.3 Consume Messages
+
+To read all messages:
+```
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server hostname:9092 --topic kafka-topic-test --from-beginning
+
+```
+
+### 6.4 Delete Kafka Topics
+```
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server hostname:9092 --delete --topic kafka-topic-test
+```
+
+## ✅ Done!
+You now have a single-node Kafka cluster using KRaft mode running without ZooKeeper.
+
+To set up a multi-node Kafka KRaft cluster, follow next folder in this repository - [multinode-kafka-kraft-cluster](URL)
+
+
+
+
 
