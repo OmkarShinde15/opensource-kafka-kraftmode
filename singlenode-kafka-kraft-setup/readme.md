@@ -47,10 +47,28 @@ sed -i 's|/tmp/kraft-combined-logs|/data/kafkadata/logs|' /opt/kafka/config/kraf
 
 ```
 
-### 2.2 Format Kafka Storage Directory with Cluster ID
+
+### 2.3 Set Unique Node ID and Hostname
+
+Edit the file: /opt/kafka/config/kraft/server.properties
+
+Replace/add:
+```
+# The node id associated with this instance's roles
+node.id=1
+
+# The connect string for the controller quorum
+controller.quorum.voters=1@hostname:9093
+listeners=PLAINTEXT://hostname:9092,CONTROLLER://hostname:9093
+log.dirs=/data/kafkadata/logs
+```
+Take reference from server.properties stored in repository folder 
+
+
+## 🔐 Step 3: Generate and Format Cluster ID
 Kafka in KRaft mode requires a Cluster ID to initialize the log directory for metadata storage.
 
-Step 1: Generate a Cluster ID
+### 3.1 Generate a Cluster ID
 ```bash
 /opt/kafka/bin/kafka-storage.sh random-uuid
 ```
@@ -59,3 +77,28 @@ Sample output:
 ```
 URaeRekUQAyy8wLMNX2Q-w
 ```
+
+Save this UUID — you will use the same cluster ID on all nodes in a multi-node setup.
+
+### 3.2 Format the Storage Directory
+
+Now format the Kafka storage directory with the generated Cluster ID:
+```
+/opt/kafka/bin/kafka-storage.sh format -t URaeRekUQAyy8wLMNX2Q-w -c /opt/kafka/config/kraft/server.properties
+```
+Expected output:
+```
+Formatting /data/kafkadata/logs with metadata.version X.Y-Z
+```
+
+After this step, Kafka metadata files will be initialized under the logs directory:
+```
+ls -1 /data/kafkadata/logs/
+```
+
+You should see:
+```
+bootstrap.checkpoint
+meta.properties
+```
+
