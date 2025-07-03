@@ -13,12 +13,11 @@ This guide walks you through installing and running **Kafka in KRaft mode** on a
 
 ## 🚀 Prerequisites
 
-- Linux-based system (Tested on CentOS/Ubuntu)
-- Java 8 or higher installed
-- Sudo/root access
-- 2+ GB RAM
-- Good internet access or internal repo if offline
-- Static IP or resolvable hostname
+ - Ensure you assign each node enough disk space depending on the volume of the data you are expecting to store based on your data retention policies
+ - Ensure you have a reliable network connection between your cluster nodes
+ - Ensure that the CPU and RAM assigned to your cluster brokers can handle the load related to the data streaming.
+ - Ensure you have an odd number of nodes in the cluster to avoid the split-brain scenario(incase of multinode setup).
+ - Install Java 8+
 
 ---
 
@@ -88,7 +87,7 @@ These settings influence disk storage and, indirectly, memory consumption depend
 
 To update retention settings, edit the same file: /opt/kafka/config/kraft/server.properties
 
-📄 Note: Refer to the [server.properties]() file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/singlenode-kafka-kraft-setup/server.properties) file version-controlled in this repository to align configurations across environments.
 
 ## 🔐 Step 3: Generate and Format Cluster ID
 Kafka in KRaft mode requires a Cluster ID to initialize the log directory for metadata storage.
