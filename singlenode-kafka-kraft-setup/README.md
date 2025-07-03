@@ -215,7 +215,7 @@ To read all messages:
 ## ✅ Done!
 You now have a single-node Kafka cluster using KRaft mode running without ZooKeeper.
 
-To set up a multi-node Kafka KRaft cluster, follow next folder in this repository - [multinode-kafka-kraft-cluster](URL)
+To set up a multi-node Kafka KRaft cluster, follow next folder in this repository - [multinode-kafka-kraft-cluster](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/tree/main/multimode-kafka-kraftsetup)
 
 
 
