@@ -43,13 +43,13 @@ tar -xzf kafka_2.13-3.9.0.tgz --strip-components=1
 
 #### Kafka Data Logs (i.e., actual Kafka topic data)
 
-Kafka by default stores logs under `/tmp/kraft-combined-logs`. Update this to a persistent path like `/data/kafkadata/logs`.
+Kafka by default stores logs under `/tmp/kraft-combined-logs`. Update this to a persistent path like `/data/kafkadata`.
 
 ```bash
-sudo mkdir -p /data/kafkadata/logs
+sudo mkdir -p /data/kafkadata
 
 # Update the log directory in the configuration
-sed -i 's|/tmp/kraft-combined-logs|/data/kafkadata/logs|' /opt/kafka/config/kraft/server.properties
+sed -i 's|/tmp/kraft-combined-logs|/data/kafkadata|' /opt/kafka/config/kraft/server.properties
 
 ```
 
@@ -89,7 +89,7 @@ controller.quorum.voters=1@hostname:9093
 listeners=PLAINTEXT://hostname:9092,CONTROLLER://hostname:9093
 
 # Directory where Kafka stores log data
-log.dirs=/data/kafkadata/logs
+log.dirs=/data/kafkadata
 
 ```
 Kafka controls how long it retains topic log segments through several parameters. One key setting is:
@@ -146,7 +146,24 @@ You should see:
 bootstrap.checkpoint
 meta.properties
 ```
+Content of meta.properties looks like this
 
+```
+#Mon Mar 17 15:51:41 IST 2025
+cluster.id=URaeRekUQAyy8wLMNX2Q-w
+version=1
+directory.id=AclUncZ3rKYYP5eqwmZSTg
+node.id=1
+```
+Here's a quick summary of the contents of Kafka's meta.properties file:
+
+Field	Description
+ - cluster.id	Unique ID for the entire Kafka cluster (same across all brokers), You provide it during kafka-storage.sh format using the -t option.
+ - node.id	Unique ID for this specific broker, defined in server.properties.
+ - directory.id	Unique ID for this specific log directory (generated during formatting).
+ - version	Metadata format version (typically 1 for Kafka KRaft mode).
+
+📝 Purpose: Ensures that each broker is correctly linked to the cluster and its own log data. Essential for KRaft-based Kafka clusters.
 
 ## 📈 Step 4: Configure Kafka Heap Size (Optional)
 
