@@ -59,8 +59,6 @@ sed -i 's|/tmp/kraft-combined-logs|/data/kafkadata|' /opt/kafka/config/kraft/ser
 
    - Topic partition directories (e.g., __consumer_offsets-12, mytopic-0)
 
- - Each partition directory contains segment files like 00000000000000000000.log, .index, and .timeindex.
-
 So this is not the service log; it's the persistent message data Kafka serves to producers/consumers.
 
 #### Kafka Service Logs (logging for broker activities)
