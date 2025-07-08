@@ -2,7 +2,7 @@
 
 Document for the same - Install 3 node Apache Kafka Kraft Cluster
 
-## Configuring SASL_PLAINTEXT or PLAINTEXT on Kafka for enabling SSL
+## Enabling SSL on SASL_PLAINTEXT or PLAINTEXT cluster
 
 Assuming you have installed and Kafka with KRaft is running on three nodes, proceed to configure SSL on three-node KRaft Kafka cluster.
 
@@ -73,8 +73,60 @@ In my case I have created additional subdirectory but not mandatory
 Changes related to change mode from SASL_PLAINTEXT to SASL_SSL
 ```
 security.inter.broker.protocol=SASL_SSL
-advertised.listeners=SASL_SSL://nvmbddvv008845.bss.dev.jio.com:9092
-listeners=SASL_SSL://nvmbddvv008845.bss.dev.jio.com:9092,CONTROLLER://nvmbddvv008845.bss.dev.jio.com:9093
+advertised.listeners=SASL_SSL://hostname1.com:9092
+listeners=SASL_SSL://hostname1.com:9092,CONTROLLER://hostname1.com:9093
 ```
 
+## Adding configuration wrt SSL
+
+```
+######### SSL ##########
+
+ssl.truststore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.truststore.jks
+ssl.truststore.password=changeit
+ssl.keystore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.keystore.jks
+ssl.keystore.password=changeit
+ssl.key.password=changeit
+ssl.client.auth=required
+```
+
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multinode-kafka-kraft-sasl-(ssl-or-plaintext)-setup/service.properties) file version-controlled in this repository to align configurations across environments.
+
+## Update your admin.config and user.config file with below entries
+
+adminssl.config
+```
+security.protocol=SASL_SSL
+ssl.truststore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.truststore.jks
+ssl.truststore.password=your_password
+ssl.keystore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.keystore.jks
+ssl.keystore.password=your_password
+
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="your_password";
+sasl.mechanism=PLAIN
+```
+userassl.config
+
+```
+security.protocol=SASL_SSL
+ssl.truststore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.truststore.jks
+ssl.truststore.password=your_password
+ssl.keystore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.keystore.jks
+ssl.keystore.password=your_password
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="usera" password="your_password";
+sasl.mechanism=PLAIN
+```
+
+Check whether you are able to list, produce & consumer kafka topic
+
+## Now you can create,list,produce,consumer from any node
+```
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server hostname1.com:9092,hostname2.com:9092,hostname3.com:9092 --list --command-config /opt/kafka/config/kraft/adminssl.config
+
+/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server hostname1.com:9092,hostname2.com:9092,hostname3.com:9092 --topic kafka-topic-test --producer.config /opt/kafka/config/kraft/userassl.config
+
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server hostname1.com:9092,hostname2.com:9092,hostname3.com:9092 --topic kafka-topic-test --consumer-config /opt/kafka/config/kraft/userassl.config --from-beginning
+
+
+```
 
