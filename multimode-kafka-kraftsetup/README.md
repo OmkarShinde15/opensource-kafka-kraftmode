@@ -37,4 +37,52 @@ By default, a node is assigned both roles:
 
 <img width="884" alt="image" src="https://github.com/user-attachments/assets/00194391-bc03-4d9d-a64b-031c564b06e9" />
 
+## Set the Node ID for Each Node in the cluster
+To uniquely identify each other, each Node in the cluster must have a unique ID.
 
+Edit the file: /opt/kafka/config/kraft/server.properties
+
+Node 1: hostname1.com
+```
+The node id associated with this instance's roles
+node.id=1
+```
+
+Node 2: hostname2.com
+```
+The node id associated with this instance's roles
+node.id=2
+```
+Node 3: hostname3.com
+```
+The node id associated with this instance's roles
+node.id=3
+```
+
+## Specify a list of Controller Nodes in the Cluster
+
+Next, you need to tell Kafka which nodes to use as controllers. This can be done by updating the value of the controller.quorum.voters parameter.
+
+The controller is defined as **ID@ADDRESS:PORT**. If you have multiple controllers, define them in comma separate. The address could be resolvable hostname or IP address.
+
+By default, Kafka expects to run as a single node cluster hence, the setting, controller.quorum.voters=1@localhost:9093.
+
+Update this setting with the list of your nodes (Do this on all the nodes);
+
+```
+controller.quorum.voters=1@hostname1.com:9093,2@hostname2.com:9093,3@hostname3.com:9093
+```
+Ensure the port used is not used by any other application/service already.
+
+## Set the Name of the Brokers and Controllers Listener
+
+Under the Socket Server Settings, you need to define the name of listener used for communication between brokers and used by the controllers. This is set to PLAINTEXT and CONTROLLER (respectively) by default;
+```
+inter.broker.listener.name=PLAINTEXT
+...
+controller.listener.names=CONTROLLER
+```
+
+We will leave it with the default names! If you want, you can update it. These names will be used in other config settings.
+
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/singlenode-kafka-kraft-setup/server.properties) file version-controlled in this repository to align configurations across environments.
