@@ -35,7 +35,9 @@ vim /opt/kafka/config/kraft/server.properties
 ```
 By default, a node is assigned both roles:
 
-<img width="884" alt="image" src="https://github.com/user-attachments/assets/00194391-bc03-4d9d-a64b-031c564b06e9" />
+<img width="542" alt="image" src="https://github.com/user-attachments/assets/b3bb17a9-d23a-43e0-bc7d-2211cc1a6bb6" />
+
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 
 ## Set the Node ID for Each Node in the cluster
 To uniquely identify each other, each Node in the cluster must have a unique ID.
@@ -58,7 +60,9 @@ Node 3: hostname3.com
 The node id associated with this instance's roles
 node.id=3
 ```
+<img width="459" alt="image" src="https://github.com/user-attachments/assets/a77dcc98-f937-432b-aaf8-fa86db716902" />
 
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 ## Specify a list of Controller Nodes in the Cluster
 
 Next, you need to tell Kafka which nodes to use as controllers. This can be done by updating the value of the controller.quorum.voters parameter.
@@ -72,7 +76,13 @@ Update this setting with the list of your nodes (Do this on all the nodes);
 ```
 controller.quorum.voters=1@hostname1.com:9093,2@hostname2.com:9093,3@hostname3.com:9093
 ```
+<img width="687" alt="image" src="https://github.com/user-attachments/assets/b5666171-d4dd-4652-9229-7b322d836110" />
+
+
+
 Ensure the port used is not used by any other application/service already.
+
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 
 ## Set the Name of the Brokers and Controllers Listener
 
@@ -83,6 +93,9 @@ inter.broker.listener.name=PLAINTEXT
 controller.listener.names=CONTROLLER
 ```
 
+<img width="774" alt="image" src="https://github.com/user-attachments/assets/d75d5e67-ebc2-4e4f-83c5-2aece870ab48" />
+
+
 We will leave it with the default names! If you want, you can update it. These names will be used in other config settings.
 
-📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/singlenode-kafka-kraft-setup/server.properties) file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
