@@ -99,3 +99,35 @@ controller.listener.names=CONTROLLER
 We will leave it with the default names! If you want, you can update it. These names will be used in other config settings.
 
 📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+
+## Set the Socket Server Address
+
+Next, you need to define address the socket server listens on.
+
+By default, it is set to listen on all interfaces on port 9092/tcp (Broker listener) and port 9093/tcp (controller listener), listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+
+We will update this to set specific interface:
+
+Node 1:
+```
+#listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+listeners=PLAINTEXT://hostname1.com:9092,CONTROLLER://hostname1.com:9093
+```
+Node 2:
+```
+#listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+listeners=PLAINTEXT://hostname2.com:9092,CONTROLLER://hostname2.com:9093
+```
+Node 3:
+```
+#listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+listeners=PLAINTEXT://hostname3.com:9092,CONTROLLER://hostname3.com:9093
+```
+
+<img width="963" alt="image" src="https://github.com/user-attachments/assets/0f6b6cf7-f878-4489-99a3-a5ef1703efe4" />
+
+
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+
+
+
