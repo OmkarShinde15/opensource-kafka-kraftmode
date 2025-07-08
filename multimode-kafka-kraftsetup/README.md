@@ -194,7 +194,7 @@ node.id=2
 
 Node 3:
 ```
-cluster.id=CqzRmHD2uNGeT1MfkeAJHg
+cluster.id=URaeRekUQAyy8wLMNX2Q-w
 version=1
 directory.id=CqzRmHD2uNGeT1MfkeAJHg
 node.id=3
