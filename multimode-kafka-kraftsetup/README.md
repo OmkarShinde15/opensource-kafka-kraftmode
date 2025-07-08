@@ -161,7 +161,7 @@ advertised.listeners=PLAINTEXT://hostname3.com:9092
 More partitions allow greater parallelism for consumption, but this will also result in more files across the brokers.
 
 The default is set to 1. Ensure that you use a number that is at least divisible by the number of nodes in the cluster. Let’s use 6 in our case.
-``
+```
 #num.partitions=1
 num.partitions=6
 ```
@@ -174,3 +174,60 @@ Ensure that these ports, 9093/tcp ( between controller nodes) and 9092/tcp (betw
 ## Update the Cluster ID
 
 When you setup KRaft Kafka, there is a step that you had to format Kafka logs directory to KRaft format. In the process, a random cluster ID (**cluster.id**) is generated. This information, is stored in the meta.properties in the logs directory. In order to avoid unexpected error due to INCONSISTENT_CLUSTER_ID in VOTE response, you need to edit the meta.properties file and change the ID to be same across all nodes.
+
+
+Node 1:
+```
+cluster.id=URaeRekUQAyy8wLMNX2Q-w
+version=1
+directory.id=AclUncZ3rKYYP5eqwmZSTg
+node.id=1
+```
+
+Node 2:
+```
+cluster.id=URaeRekUQAyy8wLMNX2Q-w
+version=1
+directory.id=BxtVp9D7nLReX6QsjdWRLg
+node.id=2
+```
+
+Node 3:
+```
+cluster.id=CqzRmHD2uNGeT1MfkeAJHg
+version=1
+directory.id=CqzRmHD2uNGeT1MfkeAJHg
+node.id=3
+```
+
+```
+Notes: 
+ - **cluster.id** should be same on all 3 nodes, which is the UUID we generated and used for formatting "log.dir=/data/kafkadata/logs" on all 3 nodes.
+ - **node.id** inside log.dir/meta.properties  should be similar to **node.id** /opt/kafka/config/kraft/server.properties.
+ - **directory.id** should be different on all 3 nodes, which is generated during formatting
+```
+
+## Restart Kafka Service
+
+Restart Kafka service from node 1 -> node 2 -> node 3 to apply the changes.
+```
+systemctl restart kafka
+```
+## Check the service:
+```
+systemctl status kafka
+```
+
+## Check the Kafka KRaft cluster ports
+
+ss -altnp | grep :90
+
+<img width="1329" alt="image" src="https://github.com/user-attachments/assets/14e19046-1fca-4740-976e-801029f7bcec" />
+
+## Now you can create,list,produce,consumer from any node
+```
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server hostname1.com:9092,hostname2.com:9092,hostname3.com:9092 --list
+
+
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server hostname1.com:9092,hostname2.com:9092,hostname3.com:9092 --topic kafka-topic-test --from-beginning
+```
