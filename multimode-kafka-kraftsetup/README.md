@@ -130,4 +130,47 @@ listeners=PLAINTEXT://hostname3.com:9092,CONTROLLER://hostname3.com:9093
 📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 
 
+## Update the Broker Advertised Listener Address
 
+If you didn’t do this already, you need to update the broker listener address that is advised to the clients.
+
+By default set to localhost.
+
+Node 1
+```
+#advertised.listeners=PLAINTEXT://localhost:9092
+advertised.listeners=PLAINTEXT://hostname1.com:9092
+```
+Node 2;
+```
+#advertised.listeners=PLAINTEXT://localhost:9092
+advertised.listeners=PLAINTEXT://hostname2.com:9092
+```
+Node 3
+```
+#advertised.listeners=PLAINTEXT://localhost:9092
+advertised.listeners=PLAINTEXT://hostname3.com:9092
+```
+<img width="690" alt="image" src="https://github.com/user-attachments/assets/d92bd1d7-1e3b-4b0a-853d-973ec23b510a" />
+
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+
+
+## Define the Number of Log Partitions per Topic
+
+More partitions allow greater parallelism for consumption, but this will also result in more files across the brokers.
+
+The default is set to 1. Ensure that you use a number that is at least divisible by the number of nodes in the cluster. Let’s use 6 in our case.
+``
+#num.partitions=1
+num.partitions=6
+```
+In the very basic setup, those are just the only configs we can make. Save and exit the file.
+
+## Open Controller/Broker Ports on Firewall
+
+Ensure that these ports, 9093/tcp ( between controller nodes) and 9092/tcp (between brokers and clients) are opened on firewall.
+
+## Update the Cluster ID
+
+When you setup KRaft Kafka, there is a step that you had to format Kafka logs directory to KRaft format. In the process, a random cluster ID (**cluster.id**) is generated. This information, is stored in the meta.properties in the logs directory. In order to avoid unexpected error due to INCONSISTENT_CLUSTER_ID in VOTE response, you need to edit the meta.properties file and change the ID to be same across all nodes.
