@@ -37,7 +37,7 @@ By default, a node is assigned both roles:
 
 <img width="542" alt="image" src="https://github.com/user-attachments/assets/b3bb17a9-d23a-43e0-bc7d-2211cc1a6bb6" />
 
-📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraft-setup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 
 ## Set the Node ID for Each Node in the cluster
 To uniquely identify each other, each Node in the cluster must have a unique ID.
@@ -62,7 +62,7 @@ node.id=3
 ```
 <img width="459" alt="image" src="https://github.com/user-attachments/assets/a77dcc98-f937-432b-aaf8-fa86db716902" />
 
-📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraft-setup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 ## Specify a list of Controller Nodes in the Cluster
 
 Next, you need to tell Kafka which nodes to use as controllers. This can be done by updating the value of the controller.quorum.voters parameter.
@@ -82,7 +82,7 @@ controller.quorum.voters=1@hostname1.com:9093,2@hostname2.com:9093,3@hostname3.c
 
 Ensure the port used is not used by any other application/service already.
 
-📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraft-setup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 
 ## Set the Name of the Brokers and Controllers Listener
 
@@ -98,7 +98,7 @@ controller.listener.names=CONTROLLER
 
 We will leave it with the default names! If you want, you can update it. These names will be used in other config settings.
 
-📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraft-setup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 
 ## Set the Socket Server Address
 
@@ -127,7 +127,7 @@ listeners=PLAINTEXT://hostname3.com:9092,CONTROLLER://hostname3.com:9093
 <img width="963" alt="image" src="https://github.com/user-attachments/assets/0f6b6cf7-f878-4489-99a3-a5ef1703efe4" />
 
 
-📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraft-setup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 
 
 ## Update the Broker Advertised Listener Address
@@ -153,7 +153,7 @@ advertised.listeners=PLAINTEXT://hostname3.com:9092
 ```
 <img width="690" alt="image" src="https://github.com/user-attachments/assets/d92bd1d7-1e3b-4b0a-853d-973ec23b510a" />
 
-📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraftsetup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multimode-kafka-kraft-setup/node1-server.properties) file version-controlled in this repository to align configurations across environments.
 
 
 ## Define the Number of Log Partitions per Topic
