@@ -2,6 +2,8 @@
 
 Assuming you have installed and Kafka with KRaft is running on three nodes, proceed to configure SSL on three-node KRaft Kafka cluster.
 
+This document provides configuration properties to help you enable SSL.
+
 In our setup, we have three nodes:
 
 
@@ -86,9 +88,11 @@ ssl.key.password=password
 ssl.client.auth=required
 ```
 
-📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multinode-kafka-kraft-sasl-(ssl-or-plaintext)-setup/service.properties) file version-controlled in this repository to align configurations across environments.
+📄 Note: Refer to the [server.properties](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/blob/main/multinode-kafka-kraft-sasl-ssl-setup/service.properties) file version-controlled in this repository to align configurations across environments.
 
 ## Update your admin.config and user.config file with below entries
+
+Do below changes if you were using SASL_PLAINTEXT 
 
 adminssl.config
 ```
