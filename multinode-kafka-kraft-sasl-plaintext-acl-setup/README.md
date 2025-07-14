@@ -34,6 +34,7 @@ sasl.mechanism.inter.broker.protocol=PLAIN
 
 #### Below parameters are regarding ACL authorization
 
+We are using "PlainLoginModule" for which "StandardAuthorizer" is used. We can also use keytab based authentication which needs different "Authorizer"
 
 ```
 ######### ACL #######
@@ -47,7 +48,7 @@ allow.everyone.if.no.acl.found=false
 
 ## Step to use SASL and ACL in kafka
 
-## Lets create users
+#### Lets create users
 
 Create file named "pathto/kafka/config/kraft/jaas.config" and write below entry, here we have create 3 user admin, usera, userb
 ```
@@ -56,14 +57,14 @@ KafkaServer {
  username="admin"
  password="admin"
  user_admin="admin"
- user_usera="usera"
+ user_usera="usera"    //username="password"
  user_userb="userb";
 };
 ```
 
-### Pass this file as a KAFKA_OPT variable inside kafka.service file
+#### Pass this file as a KAFKA_OPT variable inside kafka.service file
 
-vi cat /etc/systemd/system/kafka.service
+vi /etc/systemd/system/kafka.service
 ```
 [Unit]
 Description=Apache Kafka
@@ -84,7 +85,7 @@ WantedBy=default.target
 ```
 
 
-### Lets create config file for each user as well and store it here "pathto/kafka/config/kraft"
+#### Lets create config file for each user as well and store it here "pathto/kafka/config/kraft"
 
 ```
 vi admin.config
