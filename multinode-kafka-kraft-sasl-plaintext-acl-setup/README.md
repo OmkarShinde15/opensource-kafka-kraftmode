@@ -1,6 +1,6 @@
 ## Pre-Requisite : 3 node PLAINTEXT Kakfa Kraft Cluster
 
-Document for the same - [Install 3 node Apache Kafka Kraft Cluster] (https://github.com/OmkarShinde15/opensource-kafka-kraftmode/tree/main/multimode-kafka-kraftsetup)
+Document for the same - [Install 3 node Apache Kafka Kraft Cluster](https://github.com/OmkarShinde15/opensource-kafka-kraftmode/tree/main/multimode-kafka-kraftsetup)
 
 
 ## Setting up Three-Node Kafka KRaft Cluster
