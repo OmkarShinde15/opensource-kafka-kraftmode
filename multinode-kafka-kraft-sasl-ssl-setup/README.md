@@ -1,7 +1,3 @@
-## Pre-Requisite : 3 node PLAINTEXT Kakfa Kraft Cluster
-
-Document for the same - Install 3 node Apache Kafka Kraft Cluster
-
 ## Enabling SSL on SASL_PLAINTEXT or PLAINTEXT cluster
 
 Assuming you have installed and Kafka with KRaft is running on three nodes, proceed to configure SSL on three-node KRaft Kafka cluster.
