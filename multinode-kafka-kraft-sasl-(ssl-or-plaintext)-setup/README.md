@@ -83,10 +83,10 @@ listeners=SASL_SSL://hostname1.com:9092,CONTROLLER://hostname1.com:9093
 ######### SSL ##########
 
 ssl.truststore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.truststore.jks
-ssl.truststore.password=changeit
+ssl.truststore.password=password
 ssl.keystore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.keystore.jks
-ssl.keystore.password=changeit
-ssl.key.password=changeit
+ssl.keystore.password=password
+ssl.key.password=password
 ssl.client.auth=required
 ```
 
@@ -98,9 +98,9 @@ adminssl.config
 ```
 security.protocol=SASL_SSL
 ssl.truststore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.truststore.jks
-ssl.truststore.password=your_password
+ssl.truststore.password=password
 ssl.keystore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.keystore.jks
-ssl.keystore.password=your_password
+ssl.keystore.password=password
 
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="your_password";
 sasl.mechanism=PLAIN
@@ -110,9 +110,9 @@ userassl.config
 ```
 security.protocol=SASL_SSL
 ssl.truststore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.truststore.jks
-ssl.truststore.password=your_password
+ssl.truststore.password=password
 ssl.keystore.location=/opt/kafka/config/kraft/ssl/oskafkassl/kafka.keystore.jks
-ssl.keystore.password=your_password
+ssl.keystore.password=password
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="usera" password="your_password";
 sasl.mechanism=PLAIN
 ```
