@@ -126,15 +126,15 @@ newtopicuserb
 Below rule will provide Read(consume), Write(produce), Describe(list/describe) privilege on respective topic
 
 ```
-/opt/kafka/bin/kafka-acls.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092   --add --allow-principal User:usera   --operation Read --operation Describe --operation Write   --allow-host '*'   --topic 'newtopicusera'   --command-config /opt/kafka/config/kraft/admin.config
+/opt/kafka/bin/kafka-acls.sh --bootstrap-server hostname1.com:9092   --add --allow-principal User:usera   --operation Read --operation Describe --operation Write   --allow-host '*'   --topic 'newtopicusera'   --command-config /opt/kafka/config/kraft/admin.config
 
-/opt/kafka/bin/kafka-acls.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092   --add --allow-principal User:userb   --operation Read --operation Describe --operation Write   --allow-host '*'   --topic 'newtopicuserb'   --command-config /opt/kafka/config/kraft/admin.config
+/opt/kafka/bin/kafka-acls.sh --bootstrap-server hostname1.com:9092   --add --allow-principal User:userb   --operation Read --operation Describe --operation Write   --allow-host '*'   --topic 'newtopicuserb'   --command-config /opt/kafka/config/kraft/admin.config
 ```
 
 Additionally you need one more rule for consuming topic
 
 ```
-/opt/kafka/bin/kafka-acls.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092   --add --allow-principal User:usera   --operation READ   --group usera-consumer-group   --command-config /opt/kafka/config/kraft/admin.config
+/opt/kafka/bin/kafka-acls.sh --bootstrap-server hostname1.com:9092   --add --allow-principal User:usera   --operation READ   --group usera-consumer-group   --command-config /opt/kafka/config/kraft/admin.config
 ```
 
 
@@ -161,16 +161,16 @@ Current ACLs for resource `ResourcePattern(resourceType=GROUP, name=usera-consum
 List topic using usera & userb
 
 ```
-/opt/kafka/bin/kafka-topics.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092 --list  --command-config /opt/kafka/config/kraft/usera.config
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server hostname1.com:9092 --list  --command-config /opt/kafka/config/kraft/usera.config
 newtopicusera
 
-/opt/kafka/bin/kafka-topics.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092 --list  --command-config /opt/kafka/config/kraft/userb.config
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server hostname1.com:9092 --list  --command-config /opt/kafka/config/kraft/userb.config
 newtopicuserb
 ```
 
 Produce Data into "newtopicusera" topic with usera config - Success
 ```
-/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092   --topic newtopicusera   --producer.config /opt/kafka/config/kraft/usera.config
+/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server hostname1.com:9092   --topic newtopicusera   --producer.config /opt/kafka/config/kraft/usera.config
 >HI, I am usera writing
 >
 >
