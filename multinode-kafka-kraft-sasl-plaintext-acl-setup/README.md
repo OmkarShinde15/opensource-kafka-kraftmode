@@ -21,8 +21,8 @@ In our setup, we have three nodes:
 #### Below parameters are regarding SASL authentication , replace PLAINTEXT with SASL_PLAINTEXT
 
 ```
-listeners=SASL_PLAINTEXT://nvmbddvv008845.bss.dev.jio.com:9092,CONTROLLER://nvmbddvv008845.bss.dev.jio.com:9093
-advertised.listeners=SASL_PLAINTEXT://nvmbddvv008845.bss.dev.jio.com:9092
+listeners=SASL_PLAINTEXT://hostname1.com:9092,CONTROLLER://hostname1.com:9093
+advertised.listeners=SASL_PLAINTEXT://hostname1.com:9092
 controller.listener.names=CONTROLLER
 listener.security.protocol.map=CONTROLLER:SASL_PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
 
@@ -117,4 +117,87 @@ kafka-topic-test-user
 newtopicadmin
 newtopicusera
 newtopicuserb
+```
+
+
+## Create rules for usera and userb to access "newtopicusera" & "newtopicuserb" topics
+
+Below rule will provide Read(consume), Write(produce), Describe(list/describe) privilege on respective topic
+
+```
+/opt/kafka/bin/kafka-acls.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092   --add --allow-principal User:usera   --operation Read --operation Describe --operation Write   --allow-host '*'   --topic 'newtopicusera'   --command-config /opt/kafka/config/kraft/admin.config
+
+/opt/kafka/bin/kafka-acls.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092   --add --allow-principal User:userb   --operation Read --operation Describe --operation Write   --allow-host '*'   --topic 'newtopicuserb'   --command-config /opt/kafka/config/kraft/admin.config
+```
+
+Additionally you need one more rule for consuming topic
+
+```
+/opt/kafka/bin/kafka-acls.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092   --add --allow-principal User:usera   --operation READ   --group usera-consumer-group   --command-config /opt/kafka/config/kraft/admin.config
+```
+
+
+## List ACL using admin user config file
+
+```
+/opt/kafka/bin/kafka-acls.sh --bootstrap-server hostname1.com:9092 --list --command-config /opt/kafka/config/kraft/admin.config
+Current ACLs for resource `ResourcePattern(resourceType=TOPIC, name=newtopicusera, patternType=LITERAL)`:
+        (principal=User:usera, host=*, operation=READ, permissionType=ALLOW)
+        (principal=User:usera, host=*, operation=DESCRIBE, permissionType=ALLOW)
+        (principal=User:usera, host=*, operation=WRITE, permissionType=ALLOW)
+
+Current ACLs for resource `ResourcePattern(resourceType=TOPIC, name=newtopicuserb, patternType=LITERAL)`:
+        (principal=User:userb, host=*, operation=READ, permissionType=ALLOW)
+        (principal=User:userb, host=*, operation=DESCRIBE, permissionType=ALLOW)
+        (principal=User:userb, host=*, operation=WRITE, permissionType=ALLOW)
+
+Current ACLs for resource `ResourcePattern(resourceType=GROUP, name=usera-consumer-group, patternType=LITERAL)`:
+        (principal=User:usera, host=*, operation=READ, permissionType=ALLOW)
+```
+
+## Lets list, produce & consumer the topic
+
+List topic using usera & userb
+
+```
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092 --list  --command-config /opt/kafka/config/kraft/usera.config
+newtopicusera
+
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092 --list  --command-config /opt/kafka/config/kraft/userb.config
+newtopicuserb
+```
+
+Produce Data into "newtopicusera" topic with usera config - Success
+```
+/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server nvmbddvv008845.bss.dev.jio.com:9092   --topic newtopicusera   --producer.config /opt/kafka/config/kraft/usera.config
+>HI, I am usera writing
+>
+>
+```
+
+Produce Data into "newtopicusera" topic with userb config - Failed
+
+```
+/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server hostname1.com:9092   --topic newtopicusera   --producer.config /opt/kafka/config/kraft/userb.config
+>sc
+[2025-04-04 13:07:31,858] WARN [Producer clientId=console-producer] The metadata response from the cluster reported a recoverable issue with correlation id 5 : {newtopicusera=TOPIC_AUTHORIZATION_FAILED} (org.apache.kafka.clients.NetworkClient)
+[2025-04-04 13:07:31,862] ERROR [Producer clientId=console-producer] Topic authorization failed for topics [newtopicusera] (org.apache.kafka.clients.Metadata)
+[2025-04-04 13:07:31,863] ERROR Error when sending message to topic newtopicusera with key: null, value: 2 bytes with error: (org.apache.kafka.clients.producer.internals.ErrorLoggingCallback)
+org.apache.kafka.common.errors.TopicAuthorizationException: Not authorized to access topics: [newtopicusera]
+```
+
+Consume Data from "newtopicusera" topic with usera config with "usera-consumer-group" group - Success
+
+```
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server hostname1.com:9092   --topic newtopicusera   --consumer.config /opt/kafka/config/kraft/usera.config   --from-beginning --group usera-consumer-group
+HI, I am usera writing
+```
+
+Consume Data from "newtopicusera" topic with usera config without "usera-consumer-group" group - Failed
+
+```
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server hostname1.com:9092   --topic newtopicusera   --consumer.config /opt/kafka/config/kraft/usera.config   --from-beginning
+[2025-04-04 13:13:04,073] ERROR Error processing message, terminating consumer process:  (org.apache.kafka.tools.consumer.ConsoleConsumer)
+org.apache.kafka.common.errors.GroupAuthorizationException: Not authorized to access group: console-consumer-15101
+Processed a total of 0 messages
 ```
